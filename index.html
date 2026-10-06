@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cephe Hattı — Takım Savaşı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@500;600;700&family=Saira+Condensed:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <div class="hud" id="vig"></div>
+  <div class="hud" id="flare"></div>
+  <div class="hud" id="hurt"></div>
+  <div class="hud" id="scope"></div>
+  <div class="hud" id="cross"><i class="cl"></i><i class="cr"></i><i class="ct"></i><i class="cb"></i><b></b></div>
+  <div class="hud" id="hitm"><i></i><i></i><i></i><i></i></div>
+  <div class="hud" id="tscore">
+    <div class="tsTeam b"><span class="tsName">Mavi</span><b id="sc0">0</b><div class="tsBar"><i id="tsb0"></i></div></div>
+    <div class="tsMid"><small id="goalTxt">30 leşte biter</small></div>
+    <div class="tsTeam r"><b id="sc1">0</b><span class="tsName">Kızıl</span><div class="tsBar"><i id="tsb1"></i></div></div>
+  </div>
+  <div class="hud" id="net"></div>
+  <div class="hud" id="board"></div>
+  <div class="hud" id="feed"></div>
+  <div class="hud" id="killNote"></div>
+  <div class="hud" id="overB"><b id="overT"></b><span id="overS"></span></div>
+  <div class="hud" id="reloadTxt">Şarjör değiştiriliyor…</div>
+  <div class="hud" id="hint"></div>
+  <div class="hud" id="bHint"><kbd>B</kbd> silahlar ve botlar</div>
+  <div class="hud" id="hpBox"><div class="hpTop"><span class="lbl">Sağlık</span><span id="hpNum">100</span></div><div id="hpBar"><i id="hpFill"></i></div></div>
+  <div class="hud" id="ammoBox"><div class="amTop"><span id="wepName">Tabanca</span><span id="fireMode">TEK</span></div><div id="ammoNum">12 <small>/ 12</small></div><div id="reloadBar"><i id="reloadFill"></i></div><div id="slots"></div></div>
+
+  <!-- Main menu -->
+  <div class="overlay showcase" id="menu">
+    <div class="card home" data-panel="home">
+      <h1 class="homeTitle">Cephe Hattı</h1>
+      <p>Birinci şahıs takım savaşı. Arkadaşınla aynı odaya gir, iki takıma da bot asker ekle.</p>
+      <nav class="menuNav" aria-label="Ana menü">
+        <button class="navBtn primary" data-go="play">Oyna <small>Oda kur ya da katıl</small></button>
+        <button class="navBtn" data-go="arsenal">Silahlar <small id="navLoad">3 silah seçili</small></button>
+        <button class="navBtn" data-go="settings">Ayarlar <small>Grafik, ses, fare</small></button>
+        <button class="navBtn" data-go="help">Nasıl oynanır <small>Tuşlar ve ipuçları</small></button>
+      </nav>
+      <p class="small" id="homeLoadout"></p>
+    </div>
+
+    <div class="card panel" data-panel="play" hidden>
+      <div class="phead"><button class="back" data-go="home">Geri</button><h2>Oyna</h2></div>
+      <div class="row"><label for="nameIn">Adın</label><input id="nameIn" maxlength="14" autocomplete="off"></div>
+      <div class="row" role="group" aria-label="Takımın">
+        <button class="team b" data-team="0" aria-pressed="true">Mavi Tim</button>
+        <button class="team r" data-team="1" aria-pressed="false">Kızıl Tim</button>
+      </div>
+      <div class="row">
+        <button class="go" id="hostBtn">Oda kur</button>
+        <button class="go alt" id="joinBtn">Odaya katıl</button>
+      </div>
+      <p class="small">Oda kurarsan sana bir kod verilir, arkadaşın o kodla katılır. Tek başına oynamak için de oda kur, iki takıma bot ekleyip savaşı başlat.</p>
+    </div>
+
+    <div class="card panel wide" data-panel="arsenal" hidden>
+      <div class="phead"><button class="back" data-go="home">Geri</button><h2>Silahlar</h2></div>
+      <div class="loadout">
+        <h3>Silahlarını seç <span class="loadCount">0/3</span></h3>
+        <p class="small loadNote">En fazla 3 silah seçebilirsin. Oyunda 1, 2 ve 3 tuşlarıyla aralarında geçiş yaparsın.</p>
+        <div class="wgrid"></div>
+      </div>
+    </div>
+
+    <div class="card panel" data-panel="settings" hidden>
+      <div class="phead"><button class="back" data-go="home">Geri</button><h2>Ayarlar</h2></div>
+      <div class="srow"><span>Grafik kalitesi</span><div role="group" aria-label="Grafik kalitesi"><button class="qbtn" data-q="0">Düşük</button><button class="qbtn" data-q="1">Orta</button><button class="qbtn" data-q="2">Yüksek</button><button class="qbtn" data-q="3">Ultra</button></div></div>
+      <div class="srow"><span>Atmosfer</span><div role="group" aria-label="Atmosfer"><button class="qbtn" data-atm="0">Öğle</button><button class="qbtn" data-atm="1">Gün batımı</button><button class="qbtn" data-atm="2">Sisli sabah</button><button class="qbtn" data-atm="3">Yağmurlu</button><button class="qbtn" data-atm="4">Gece</button></div></div>
+      <div class="srow"><span>Fare hassasiyeti</span><div><input type="range" class="sensIn" min="10" max="300" value="100" aria-label="Fare hassasiyeti"> <span class="sensVal">1.00</span></div></div>
+      <div class="srow"><span>Ses düzeyi</span><div><input type="range" class="volIn" min="0" max="100" value="80" aria-label="Ses düzeyi"> <button class="qbtn muteBtn" aria-pressed="false">Sesi kapat</button></div></div>
+      <p class="small">Ayarların bu tarayıcıda saklanır. Oyun sırasında Esc ile de değiştirebilirsin.</p>
+    </div>
+
+    <div class="card panel" data-panel="help" hidden>
+      <div class="phead"><button class="back" data-go="home">Geri</button><h2>Nasıl oynanır</h2></div>
+      <div class="keys">
+        <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hareket</div>
+        <div><kbd>Fare</kbd> nişan al</div>
+        <div><kbd>Sol tık</kbd> ateş</div>
+        <div><kbd>Sağ tık</kbd> ya da <kbd>Z</kbd> nişan / dürbün</div>
+        <div><kbd>Boşluk</kbd> zıpla, <kbd>Shift</kbd> koş</div>
+        <div><kbd>C</kbd> koşarken kayarak kaç</div>
+        <div><kbd>F</kbd> gece fenerini aç / kapat</div>
+        <div><kbd>R</kbd> şarjör değiştir</div>
+        <div><kbd>1</kbd>–<kbd>3</kbd> ya da tekerlek: silahların</div>
+        <div><kbd>B</kbd> silah seçimi, botlar</div>
+        <div><kbd>M</kbd> sesi kapat / aç</div>
+        <div><kbd>Esc</kbd> ayarlar</div>
+      </div>
+      <p class="small">İki takımdan biri hedef leş sayısına ulaşınca tur biter. Kafadan vuruşlar daha çok hasar verir. Kayarken boyun kısalır, vurulman zorlaşır. Roketatarın patlaması kendi takımına zarar vermez.</p>
+    </div>
+  </div>
+
+  <!-- Join -->
+  <div class="overlay showcase" id="joinO" hidden>
+    <div class="card">
+      <h2>Odaya katıl</h2>
+      <p>Arkadaşının verdiği 5 harfli oda kodunu yaz. Uzun davet kodu aldıysan onu yapıştır.</p>
+      <textarea id="joinCode" rows="1" placeholder="K7Q2M" autocomplete="off" spellcheck="false"></textarea>
+      <div class="row"><button class="go" id="joinGo">Katıl</button><button class="link" id="joinBack">Geri dön</button></div>
+      <p id="joinStatus" class="small" aria-live="polite"></p>
+      <div id="answerBox" hidden>
+        <p>Bu cevap kodunu kopyalayıp arkadaşına geri gönder. O yapıştırıp "Bağlan" dediğinde oyuna girersin.</p>
+        <textarea id="answerCode" rows="4" readonly></textarea>
+        <div class="row"><button class="btn" id="copyAnswer">Cevap kodunu kopyala</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lobby (also in-game room menu) -->
+  <div class="overlay showcase" id="lobbyO" hidden>
+    <div class="card wide">
+      <h2 id="lobbyTitle">Odan hazır</h2>
+      <div id="hostOnly">
+        <div class="codebox" id="codeBox"><div><div class="small">Oda kodu</div><div id="roomCode">…</div></div><button class="btn" id="copyCode">Kopyala</button></div>
+        <p id="codeStatus" class="small" aria-live="polite"></p>
+        <button class="link" id="showManual">Kısa kod çalışmıyor mu? Davet koduyla bağlan</button>
+        <div id="manualBox" class="manual" hidden>
+          <h3>Davet koduyla bağlan</h3>
+          <ol class="steps">
+            <li>Bu davet kodunu kopyalayıp arkadaşına gönder:
+              <textarea id="inviteCode" rows="3" readonly placeholder="Davet kodu hazırlanıyor…"></textarea>
+              <button class="btn" id="copyInvite">Davet kodunu kopyala</button>
+              <button class="btn" id="mkInvite">Yeni kod oluştur</button></li>
+            <li>Arkadaşın kodu "Odaya katıl" kutusuna yapıştırınca ona bir cevap kodu çıkar. O cevap kodunu buraya yapıştır:
+              <textarea id="answerIn" rows="3" placeholder="Cevap kodunu buraya yapıştır"></textarea>
+              <button class="btn" id="acceptBtn">Bağlan</button></li>
+          </ol>
+          <p id="manualStatus" class="small" aria-live="polite"></p>
+        </div>
+      </div>
+      <p id="clientWait" class="small"></p>
+      <div class="loadout">
+        <h3>Silahlarını seç <span class="loadCount">0/3</span></h3>
+        <p class="small loadNote">En fazla 3 silah seçebilirsin. Oyunda 1, 2 ve 3 tuşlarıyla aralarında geçiş yaparsın.</p>
+        <div class="wgrid"></div>
+      </div>
+      <div class="teams">
+        <div class="tcol b"><h3>Mavi Tim</h3><ul id="list0"></ul>
+          <div class="botctl">Bot asker: <button data-bot="0" data-n="-1" aria-label="Mavi takımdan bot çıkar">−</button><span id="botN0">0</span><button data-bot="0" data-n="1" aria-label="Mavi takıma bot ekle">+</button></div></div>
+        <div class="tcol r"><h3>Kızıl Tim</h3><ul id="list1"></ul>
+          <div class="botctl">Bot asker: <button data-bot="1" data-n="-1" aria-label="Kızıl takımdan bot çıkar">−</button><span id="botN1">0</span><button data-bot="1" data-n="1" aria-label="Kızıl takıma bot ekle">+</button></div></div>
+      </div>
+      <div class="row" id="hostOpts">
+        <label>Hedef <select id="goalSel"><option value="20">20 leş</option><option value="30" selected>30 leş</option><option value="50">50 leş</option></select></label>
+        <label>Bot zorluğu <select id="diffSel"><option value="0">Kolay</option><option value="1" selected>Orta</option><option value="2">Zor</option></select></label>
+      </div>
+      <div class="row" role="group" aria-label="Grafik kalitesi"><span>Grafik kalitesi</span><button class="qbtn" data-q="0">Düşük</button><button class="qbtn" data-q="1">Orta</button><button class="qbtn" data-q="2">Yüksek</button><button class="qbtn" data-q="3">Ultra</button></div>
+      <div class="row" role="group" aria-label="Atmosfer"><span>Atmosfer</span><button class="qbtn" data-atm="0">Öğle</button><button class="qbtn" data-atm="1">Gün batımı</button><button class="qbtn" data-atm="2">Sisli sabah</button><button class="qbtn" data-atm="3">Yağmurlu</button><button class="qbtn" data-atm="4">Gece</button></div>
+      <div class="row"><label>Fare hassasiyeti <input type="range" class="sensIn" min="10" max="300" value="100" aria-label="Fare hassasiyeti"></label><span class="sensVal">1.00</span></div>
+      <div class="row"><label>Ses düzeyi <input type="range" class="volIn" min="0" max="100" value="80" aria-label="Ses düzeyi"></label><button class="qbtn muteBtn" aria-pressed="false">Sesi kapat</button></div>
+      <button class="go" id="lobbyGo">Savaşı başlat</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="death" hidden style="align-items:center;background:rgba(40,10,6,.55)">
+    <div class="card"><h1>Vuruldun</h1><p id="deathBy"></p><p id="deathT" class="small"></p></div>
+  </div>
+  <div class="overlay" id="pauseO" hidden>
+    <div class="card"><h2>Ayarlar</h2><p class="small">Oyun durmaz, savaş sürüyor.</p>
+      <div class="row"><label>Fare hassasiyeti <input type="range" class="sensIn" min="10" max="300" value="100" aria-label="Fare hassasiyeti"></label><span class="sensVal">1.00</span></div>
+      <div class="row"><label>Ses düzeyi <input type="range" class="volIn" min="0" max="100" value="80" aria-label="Ses düzeyi"></label><button class="qbtn muteBtn" aria-pressed="false">Sesi kapat</button></div>
+      <div class="row"><button class="go" id="resumeBtn">Savaşa dön</button><button class="go alt" id="quitBtn">Ana menüye dön</button></div>
+      <p class="small" style="margin-top:12px">Silahlarını değiştirmek ve bot eklemek için <kbd>B</kbd></p></div>
+  </div>
+  <div class="overlay" id="lostO" hidden style="align-items:center">
+    <div class="card"><h2>Oda ile bağlantı koptu</h2><p>Odayı kuran oyuncu çıkmış ya da bağlantısı kesilmiş olabilir.</p><button class="go" id="reloadBtn">Ana menüye dön</button></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/RoundedBoxGeometry.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

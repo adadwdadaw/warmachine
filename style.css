@@ -1,0 +1,228 @@
+:root{
+  --bg:#e7e0cb; --ink:#232818; --muted:#5d6247; --olive:#4b5a2e;
+  --blue:#3d8be0; --red:#e0503a;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#171a12; --ink:#e4dcc2; --muted:#9a9b80; --olive:#8ea35a; } }
+:root[data-theme="dark"]{ --bg:#171a12; --ink:#e4dcc2; --muted:#9a9b80; --olive:#8ea35a; }
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:"Saira Condensed","Arial Narrow",Arial,sans-serif;display:flex;flex-direction:column}
+#stage{position:relative;flex:1;min-height:0;background:#111;overflow:hidden;user-select:none;-webkit-user-select:none}
+#stage canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;pointer-events:none;color:#f1ead2;text-shadow:0 1px 2px rgba(0,0,0,.8)}
+#cross{left:50%;top:50%;width:22px;height:22px;transform:translate(-50%,-50%)}
+#cross::before,#cross::after{content:"";position:absolute;background:#f1ead2;box-shadow:0 0 2px #000}
+#cross::before{left:10px;top:0;width:2px;height:22px}
+#cross::after{top:10px;left:0;height:2px;width:22px}
+#hitm{left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .15s}
+#hitm::before,#hitm::after{content:"";position:absolute;background:#fff}
+#hitm::before{left:16px;top:0;width:2px;height:34px}
+#hitm::after{top:16px;left:0;height:2px;width:34px}
+#hitm.on{opacity:1;transition:none}
+#hitm.head::before,#hitm.head::after{background:#ff4d3a}
+#hpBox{left:20px;bottom:18px}
+#hpNum{font-family:"Black Ops One",Impact,sans-serif;font-size:2.6rem;line-height:1}
+#hpBar{width:220px;height:8px;background:rgba(0,0,0,.5);margin-top:6px}
+#hpBar i{display:block;height:100%;background:#8ec36a;width:100%}
+#ammoBox{right:20px;bottom:18px;text-align:right}
+#ammoNum{font-family:"Black Ops One",Impact,sans-serif;font-size:2.6rem;line-height:1}
+#ammoNum small{font-size:1.2rem;opacity:.7}
+#wepName{font-size:1.1rem;font-weight:600}
+#slots{display:flex;gap:6px;justify-content:flex-end;margin-top:6px}
+#slots span{border:1px solid rgba(241,234,210,.45);padding:0 7px;font-size:.9rem;opacity:.6}
+#slots span small{display:block;font-size:.65rem;line-height:1;opacity:.85}
+#slots span{text-align:center;min-width:30px}
+#slots span.on{opacity:1;background:rgba(241,234,210,.2);border-color:#f1ead2}
+#tscore{left:50%;top:10px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;background:rgba(15,18,10,.6);padding:4px 18px}
+#tscore b{font-family:"Black Ops One",Impact,sans-serif;font-weight:400;font-size:2rem;line-height:1}
+#tscore .b{color:#6fb0ff} #tscore .r{color:#ff7a62}
+#tscore small{font-size:.95rem;opacity:.75}
+#net{left:50%;top:56px;transform:translateX(-50%);font-size:.9rem;opacity:.85;white-space:nowrap}
+#board{left:14px;top:12px;background:rgba(15,18,10,.55);padding:6px 10px;min-width:190px;font-size:.95rem}
+#board .th{font-family:"Black Ops One",Impact,sans-serif;font-size:.95rem;margin-top:4px}
+#board .th.b{color:#6fb0ff} #board .th.r{color:#ff7a62}
+#board table{border-collapse:collapse;width:100%}
+#board td{padding:0 6px 0 0;white-space:nowrap}
+#board td.n{text-align:right;min-width:24px;font-weight:600}
+#board tr.me td{color:#ffe08a}
+#board tr.bot td{opacity:.75}
+#feed{right:16px;top:14px;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+#feed div{background:rgba(15,18,10,.6);padding:2px 10px;font-size:1rem;animation:fade 5s forwards}
+#feed .b{color:#6fb0ff} #feed .r{color:#ff7a62}
+@keyframes fade{0%,80%{opacity:1}100%{opacity:0}}
+#vig{inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.38) 100%)}
+#hurt{inset:0;box-shadow:inset 0 0 160px 40px rgba(200,20,10,0);transition:box-shadow .5s}
+#hurt.on{box-shadow:inset 0 0 160px 40px rgba(200,20,10,.65);transition:none}
+#scope{inset:0;display:none;background:radial-gradient(circle at 50% 50%,transparent 0,transparent 33vmin,#000 33.4vmin)}
+#scope::before,#scope::after{content:"";position:absolute;background:#000}
+#scope::before{left:50%;top:0;bottom:0;width:1px}
+#scope::after{top:50%;left:0;right:0;height:1px}
+#reloadTxt{left:50%;top:58%;transform:translateX(-50%);font-size:1.2rem;display:none}
+#killNote{left:50%;top:38%;transform:translateX(-50%);font-family:"Black Ops One",Impact,sans-serif;font-size:1.6rem;color:#ffe08a;opacity:0;transition:opacity .4s;white-space:nowrap}
+#killNote.on{opacity:1;transition:none}
+#overB{left:50%;top:30%;transform:translateX(-50%);text-align:center;display:none;background:rgba(15,18,10,.75);padding:14px 30px}
+#overB b{display:block;font-family:"Black Ops One",Impact,sans-serif;font-weight:400;font-size:2.6rem}
+#hint{left:50%;bottom:90px;transform:translateX(-50%);font-size:1rem;background:rgba(15,18,10,.55);padding:3px 12px;display:none;text-align:center;max-width:90%}
+#bHint{right:20px;bottom:120px;font-size:.9rem;opacity:.8}
+.overlay{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;background:rgba(18,21,13,.9);color:#e4dcc2;padding:28px 20px;overflow:auto;z-index:5}
+.overlay[hidden]{display:none}
+@media (min-width:900px){.overlay.showcase{justify-content:flex-start;padding-left:5vw;background:linear-gradient(90deg,rgba(14,17,10,.95) 0%,rgba(14,17,10,.9) 46%,rgba(14,17,10,.3) 70%,rgba(14,17,10,0) 100%)}.overlay.showcase .card{margin:auto 0}.overlay.showcase .card.wide{max-width:640px}}
+.card{max-width:680px;width:100%;text-align:center;margin:auto}
+.card.wide{max-width:800px}
+.card h1{font-family:"Black Ops One",Impact,sans-serif;font-weight:400;font-size:clamp(2.4rem,7vw,4.4rem);margin:0 0 6px;color:#d9c98f;line-height:1}
+.card h2{font-family:"Black Ops One",Impact,sans-serif;font-weight:400;font-size:2rem;margin:0 0 10px;color:#d9c98f}
+.card p{margin:0 0 12px;color:#b5b294;font-size:1.1rem;line-height:1.35}
+.row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:12px 0}
+input,textarea,select{background:#2b3120;border:1px solid #6c7350;color:#efe6c8;font:inherit;font-size:1.1rem;padding:6px 10px}
+textarea{width:100%;font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace;resize:vertical;word-break:break-all}
+#joinCode{font-family:"Black Ops One",Impact,sans-serif;font-size:1.6rem;text-align:center;letter-spacing:.1em}
+.team{border:2px solid #4a5233;background:transparent;color:#e4dcc2;font-family:"Black Ops One",Impact,sans-serif;font-size:1.2rem;padding:8px 22px;cursor:pointer}
+.team.b[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#0d1520}
+.team.r[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#1d0d09}
+.go{background:#8ea35a;color:#141710;border:0;padding:12px 32px;font-family:"Black Ops One",Impact,sans-serif;font-size:1.4rem;cursor:pointer}
+.go:hover{background:#a3b86a}
+.go.alt{background:#d9c98f}
+.go:disabled{opacity:.4;cursor:default}
+.btn{background:#3a4229;color:#efe6c8;border:1px solid #6c7350;padding:6px 14px;font:inherit;font-size:1rem;cursor:pointer}
+.btn:hover{background:#4a5435}
+input[type=range]{accent-color:#8ea35a;vertical-align:middle;width:160px;padding:0}
+.loadout{text-align:left;margin:12px 0}
+.loadout h3{margin:0 0 4px;font-family:"Black Ops One",Impact,sans-serif;font-weight:400;color:#d9c98f;font-size:1.25rem}
+.loadCount{color:#ffe08a;margin-left:8px}
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.wcard{position:relative;text-align:left;background:rgba(255,255,255,.03);border:1px solid #4a5233;color:#e4dcc2;padding:8px 10px;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.wcard:hover{border-color:#8ea35a}
+.wcard[aria-pressed="true"]{border:2px solid #ffe08a;background:rgba(255,224,138,.08);padding:7px 9px}
+.wcard b{font-size:1.05rem}
+.wthumb{display:block;height:70px;margin:2px -4px 4px;background:radial-gradient(ellipse at 50% 62%,rgba(217,201,143,.16),rgba(217,201,143,0) 70%)}
+.wthumb img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 5px rgba(0,0,0,.65));transition:transform .15s ease}
+.wcard:hover .wthumb img{transform:scale(1.05)}
+.wcard[aria-pressed="false"] .wthumb img{opacity:.8}
+@media (prefers-reduced-motion:reduce){.wthumb img{transition:none}}
+.wslot{z-index:1;position:absolute;top:6px;right:8px;font-family:"Black Ops One",Impact,sans-serif;color:#ffe08a;font-size:1.2rem}
+.wmeta{font-size:.82rem;color:#9a9b80;margin-bottom:3px}
+.wbar{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:6px;font-size:.78rem;color:#b5b294}
+.wbar i{display:block;height:5px;background:rgba(255,255,255,.08)}
+.wbar em{display:block;height:100%;background:#8ea35a}
+.sensVal{min-width:36px;font-weight:600;color:#ffe08a}
+@media (max-width:700px){.wgrid{grid-template-columns:repeat(2,1fr)}}
+.homeTitle{font-size:clamp(3rem,9vw,6rem)!important;letter-spacing:.01em;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.card.home,.card.panel{text-align:left}
+.menuNav{display:flex;flex-direction:column;gap:10px;margin:26px 0 18px;max-width:360px}
+.navBtn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:rgba(20,24,14,.65);border:1px solid #3e4630;border-left:4px solid #8ea35a;color:#efe6c8;font-family:"Black Ops One",Impact,sans-serif;font-size:1.65rem;line-height:1.05;padding:12px 18px;text-align:left;cursor:pointer;transition:transform .12s ease,background .12s ease}
+.navBtn small{font-family:"Saira Condensed",sans-serif;font-size:.95rem;color:#9a9b80;letter-spacing:0}
+.navBtn:hover,.navBtn:focus-visible{background:rgba(142,163,90,.22);transform:translateX(6px)}
+.navBtn.primary{background:#8ea35a;color:#141710;border-color:#8ea35a;border-left-color:#d9c98f}
+.navBtn.primary small{color:#2d3320}
+.navBtn.primary:hover{background:#a3b86a}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.phead h2{margin:0}
+.back{background:transparent;border:1px solid #6c7350;color:#d9c98f;font:inherit;font-size:1rem;padding:5px 14px;cursor:pointer}
+.back::before{content:"‹ "}
+.back:hover{background:rgba(217,201,143,.12)}
+.card.panel .row{justify-content:flex-start}
+.srow{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #2f3524}
+.srow > span{color:#d9c98f;font-size:1.05rem}
+.srow > div{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+@media (max-width:600px){.srow{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.navBtn{transition:none}.navBtn:hover{transform:none}}
+#stage:not(.playing) .hud{display:none}
+#vig,#hurt,#flare,#scope{will-change:opacity;contain:strict}
+#hpBox,#ammoBox,#tscore,#feed,#board,#cross,#hitm,#killNote,#net{will-change:transform}
+/* ---------- modern HUD ---------- */
+.hud{font-family:"Rajdhani","Saira Condensed",sans-serif}
+#cross{width:0;height:0;--g:6px}
+#cross::before,#cross::after{display:none}
+#cross i{position:absolute;background:rgba(255,255,255,.95);box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:1px}
+#cross .cl,#cross .cr{width:9px;height:2px;top:-1px}
+#cross .ct,#cross .cb{width:2px;height:9px;left:-1px}
+#cross .cl{right:var(--g)} #cross .cr{left:var(--g)} #cross .ct{bottom:var(--g)} #cross .cb{top:var(--g)}
+#cross b{position:absolute;left:-1px;top:-1px;width:2px;height:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.55)}
+#hitm{width:0;height:0;transform:none}
+#hitm::before,#hitm::after{display:none}
+#hitm i{position:absolute;left:-6px;top:-1px;width:12px;height:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.45)}
+#hitm i:nth-child(1){transform:rotate(45deg) translateX(-13px)}
+#hitm i:nth-child(2){transform:rotate(135deg) translateX(-13px)}
+#hitm i:nth-child(3){transform:rotate(225deg) translateX(-13px)}
+#hitm i:nth-child(4){transform:rotate(315deg) translateX(-13px)}
+#hitm.head i{background:#ff4d3a}
+#hpBox{left:28px;bottom:26px;width:270px;padding:10px 26px 12px 16px;background:linear-gradient(90deg,rgba(8,10,8,.8),rgba(8,10,8,.3));border-left:3px solid #8ec36a;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%)}
+.hpTop{display:flex;justify-content:space-between;align-items:baseline}
+.lbl{font-size:.78rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.65}
+#hpNum{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:2.7rem;line-height:1}
+#hpBar{width:100%;height:9px;margin-top:6px;background:rgba(255,255,255,.08);-webkit-mask-image:repeating-linear-gradient(90deg,#000 0 calc(10% - 2px),transparent calc(10% - 2px) 10%);mask-image:repeating-linear-gradient(90deg,#000 0 calc(10% - 2px),transparent calc(10% - 2px) 10%)}
+#hpBar i{background:linear-gradient(90deg,#6db34c,#b6e07c);transition:width .15s}
+#hpBox.low{border-left-color:#ff4d3a;animation:lowhp 1s ease-in-out infinite}
+@keyframes lowhp{50%{background:linear-gradient(90deg,rgba(90,10,6,.75),rgba(8,10,8,.3))}}
+#ammoBox{right:28px;bottom:26px;width:290px;padding:10px 16px 12px 26px;text-align:right;background:linear-gradient(270deg,rgba(8,10,8,.8),rgba(8,10,8,.3));border-right:3px solid #d9c98f;clip-path:polygon(16px 0,100% 0,100% 100%,0 100%)}
+.amTop{display:flex;justify-content:flex-end;gap:10px;align-items:center}
+#wepName{font-size:1.05rem;font-weight:700;letter-spacing:.05em}
+#fireMode{font-size:.7rem;font-weight:700;letter-spacing:.14em;padding:1px 6px;border:1px solid rgba(241,234,210,.45);opacity:.8}
+#ammoNum{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:3.4rem;line-height:.95;margin-top:2px}
+#ammoNum small{font-size:1.15rem;opacity:.5;font-weight:600}
+#ammoNum.low{color:#ff8a70}
+#reloadBar{height:3px;background:rgba(255,255,255,.1);margin:6px 0 4px;visibility:hidden}
+#reloadBar i{display:block;height:100%;width:0;background:#ffe08a}
+#slots{gap:5px;margin-top:6px}
+#slots span{border:1px solid rgba(241,234,210,.3);background:rgba(0,0,0,.25);padding:2px 8px;font-size:.85rem;font-weight:700;opacity:.55;min-width:38px}
+#slots span small{font-size:.68rem;letter-spacing:.08em}
+#slots span.on{opacity:1;background:rgba(217,201,143,.2);border-color:#d9c98f}
+#tscore{top:12px;gap:0;background:none;padding:0;align-items:stretch}
+.tsTeam{display:grid;align-items:center;column-gap:10px;min-width:150px;padding:6px 14px 5px;background:rgba(8,10,8,.68)}
+.tsTeam.b{grid-template-columns:1fr auto;clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);border-bottom:3px solid #3d8be0}
+.tsTeam.r{grid-template-columns:auto 1fr;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 100%,0 100%);border-bottom:3px solid #e0503a}
+.tsTeam b{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:2.1rem;line-height:1}
+.tsTeam.b b{color:#8cc2ff} .tsTeam.r b{color:#ff8f78}
+.tsName{font-size:.8rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.75}
+.tsTeam.b .tsName{text-align:right}
+.tsBar{grid-column:1 / -1;height:3px;background:rgba(255,255,255,.1);margin-top:4px;display:flex}
+.tsBar i{display:block;height:100%;width:0;transition:width .3s}
+.tsTeam.b .tsBar{justify-content:flex-end} .tsTeam.b .tsBar i{background:#6fb0ff}
+.tsTeam.r .tsBar i{background:#ff7a62}
+.tsMid{padding:6px 12px;background:rgba(8,10,8,.85);display:flex;align-items:center}
+.tsMid small{font-size:.78rem;font-weight:600;letter-spacing:.06em;opacity:.75;white-space:nowrap}
+#net{top:70px;font-weight:600;letter-spacing:.04em}
+#feed{top:16px}
+#feed div{background:linear-gradient(270deg,rgba(8,10,8,.78),rgba(8,10,8,.3));padding:3px 12px;border-right:2px solid rgba(241,234,210,.55);font-weight:600;letter-spacing:.02em;animation:feedin .18s ease-out,fade 5s forwards}
+@keyframes feedin{from{transform:translateX(24px);opacity:0}}
+#board{background:rgba(8,10,8,.62);border-left:3px solid #8ea35a;padding:6px 12px}
+#board .th{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.08em}
+#killNote{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:1.3rem;letter-spacing:.06em;top:auto;bottom:26%}
+#reloadTxt{top:auto;bottom:31%;font-size:1rem;font-weight:600;letter-spacing:.12em}
+#bHint{bottom:150px;font-weight:600}
+@media (prefers-reduced-motion:reduce){#hpBox.low{animation:none}#feed div{animation:fade 5s forwards}}
+
+#flare{inset:0;overflow:hidden;opacity:0}
+#flare i{position:absolute;border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen}
+.qbtn{background:transparent;color:#d9c98f;border:1px solid #6c7350;padding:5px 12px;font:inherit;font-size:1rem;cursor:pointer}
+.qbtn[aria-pressed="true"]{background:#d9c98f;color:#1d2116}
+.link{background:none;border:0;color:#b5b294;text-decoration:underline;font:inherit;font-size:1.05rem;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #ffd166;outline-offset:2px}
+.small{font-size:.95rem!important;color:#9a9b80!important}
+.codebox{display:inline-flex;align-items:center;gap:14px;border:2px dashed #6c7350;padding:8px 18px;margin-bottom:6px}
+#roomCode{font-family:"Black Ops One",Impact,sans-serif;font-size:2.6rem;letter-spacing:.12em;color:#ffe08a}
+.manual{text-align:left;border:1px solid #3e4630;padding:10px 16px;margin:10px 0}
+.manual h3{margin:0;font-family:"Black Ops One",Impact,sans-serif;font-weight:400;color:#d9c98f;font-size:1.2rem}
+.steps{padding-left:20px;margin:10px 0 0}
+.steps li{margin-bottom:12px}
+.steps textarea{margin:6px 0}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;text-align:left}
+.tcol{border-top:4px solid;padding:8px 12px;background:rgba(255,255,255,.03)}
+.tcol.b{border-color:var(--blue)} .tcol.r{border-color:var(--red)}
+.tcol h3{margin:0 0 6px;font-family:"Black Ops One",Impact,sans-serif;font-weight:400;font-size:1.2rem}
+.tcol.b h3{color:#6fb0ff} .tcol.r h3{color:#ff7a62}
+.tcol ul{list-style:none;margin:0 0 8px;padding:0;min-height:1.4em;font-size:1.05rem}
+.botctl{display:flex;align-items:center;gap:8px;font-size:1.05rem}
+.botctl button{width:34px;height:30px;background:#3a4229;color:#efe6c8;border:1px solid #6c7350;font-size:1.2rem;cursor:pointer;line-height:1}
+.botctl span{min-width:22px;text-align:center;font-weight:800}
+.keys{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 18px;text-align:left;margin:16px auto;max-width:540px;font-size:1rem}
+kbd{display:inline-block;min-width:1.6em;padding:0 6px;border:1px solid #6c7350;border-bottom-width:3px;background:#2b3120;color:#efe6c8;font-family:inherit;font-weight:600;text-align:center;border-radius:3px;margin-right:2px}
+#death .card h1{color:#ff6b55}
+#pauseO{background:rgba(18,21,13,.7);align-items:center}
+#pauseO .card h1{font-size:2.2rem}
+@media (max-width:700px){.keys,.teams{grid-template-columns:1fr}#board{display:none}}
+@media (prefers-reduced-motion:reduce){#feed div{animation:none}}
